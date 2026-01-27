@@ -1,0 +1,4 @@
+# Python / Poetry
+backend/.venv/
+backend/__pycache__/
+*.pyc
