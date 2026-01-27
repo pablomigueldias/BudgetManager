@@ -18,7 +18,7 @@ class Category(CategoryBase):
 
 
 class TransactionBase(BaseModel):
-    discription: str
+    description: str
     amount: float
     type: str
     date: date
