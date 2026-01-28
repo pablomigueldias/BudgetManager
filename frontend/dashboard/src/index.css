@@ -1,1 +1,91 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: rgb(var(--color-bg-app));
+    color: rgb(var(--color-text-main));
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@theme {
+  --color-primary: 22 163 74;
+  --color-primary-hover: 21 128 61;
+
+  --color-income: 22 163 74;
+  --color-expense: 220 38 38;
+  --color-warning: 234 179 8;
+
+  --color-bg-app: 243 244 246;
+  --color-bg-card: 255 255 255;
+  --color-bg-input: 249 250 251;
+
+  --color-text-main: 17 24 39;
+  --color-text-muted: 107 114 128;
+  
+  --color-border: 229 231 235;
+}
+
+@layer base {
+  body {
+    background-color: rgb(var(--color-bg-app));
+    color: rgb(var(--color-text-main));
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+
+  .btn-primary {
+    background-color: rgb(var(--color-primary));
+    color: white;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem; 
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    transition: background-color 0.2s ease-in-out;
+  }
+  .btn-primary:hover {
+    background-color: rgb(var(--color-primary-hover));
+  }
+
+  .btn-danger {
+    color: rgb(var(--color-expense));
+    font-weight: 600;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .btn-danger:hover {
+    text-decoration: underline;
+    filter: brightness(0.8);
+  }
+
+  .input-field {
+    display: block;
+    width: 100%;
+    background-color: rgb(var(--color-bg-input));
+    border: 1px solid rgb(var(--color-border));
+    border-radius: 0.5rem;
+    padding: 0.625rem; 
+    margin-top: 0.25rem; 
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-field:focus {
+    border-color: rgb(var(--color-primary));
+    box-shadow: 0 0 0 1px rgb(var(--color-primary));
+  }
+
+  .card {
+    background-color: rgb(var(--color-bg-card));
+    border: 1px solid rgb(var(--color-border));
+    border-radius: 0.75rem; 
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+}
