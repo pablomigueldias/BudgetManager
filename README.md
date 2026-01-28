@@ -70,7 +70,7 @@ If you want to clone and run this project on your machine, follow these steps:
 
 ```bash
 # Clone the repository
-git clone [https://github.com/pablomigueldias/BudgetManager](https://github.com/pablomigueldias/BudgetManager)
+git clone https://github.com/pablomigueldias/BudgetManager
 cd budget-manager/backend
 
 # Install dependencies with Poetry
