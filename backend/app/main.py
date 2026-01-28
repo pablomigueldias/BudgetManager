@@ -10,7 +10,8 @@ app = FastAPI(title='Budget Manager API')
 
 origins = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173"
+    "http://127.0.0.1:5173",
+    "https://budget-manager-puce.vercel.app/"
 ]
 
 app.add_middleware(
@@ -23,6 +24,7 @@ app.add_middleware(
 
 app.include_router(categories.router)
 app.include_router(transactions.router)
+
 
 @app.get("/")
 def root():
