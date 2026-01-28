@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { transactionService } from '../../services/transactionServices.js';
 
-const BudgetTable = () => {
+const BudgetTable = ({ onUpdate, refreshKey }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,17 @@ const BudgetTable = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, []);
+  }, [refreshKey]);
+
+  const handleDelete = async (id) => {
+    try {
+      await transactionService.remove(id);
+      if (onUpdate) onUpdate();
+    } catch (error) {
+      alert('Erro ao remover transação.')
+      console.error("Erro ao remover transação:", error)
+    }
+  }
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -63,7 +73,7 @@ const BudgetTable = () => {
                 </td>
 
                 <td className="px-6 py-4">
-                    {t.category ? t.category.name : 'Sem Categoria'}
+                  {t.category ? t.category.name : 'Sem Categoria'}
                 </td>
                 <td className="px-6 py-4">
                   <span className={`px-2 py-1 rounded-full text-xs font-semibold
@@ -74,6 +84,14 @@ const BudgetTable = () => {
                 <td className={`px-6 py-4 text-right font-bold 
                   ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
                   {formatCurrency(t.amount)}
+                </td>
+                <td className="px-6 py-4 text-center">
+                  <button
+                    onClick={() => handleDelete(t.id)}
+                    className="text-red-600 hover:text-red-900 font-semibold hover:underline"
+                  >
+                    Excluir
+                  </button>
                 </td>
               </tr>
             ))

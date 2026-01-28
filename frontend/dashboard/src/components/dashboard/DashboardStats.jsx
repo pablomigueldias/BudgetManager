@@ -45,7 +45,6 @@ const DashboardStats = ({ refreshKey }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
-            {/* Cards de Resumo */}
             <div className="space-y-4">
                 <div className="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
                     <h3 className="text-gray-500 text-sm uppercase">Entradas</h3>

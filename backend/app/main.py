@@ -58,4 +58,14 @@ def read_transactions(skip: int = 0, limit: int = 100, db: Session=Depends(get_d
     transactions = db.query(models.Transaction).offset(skip).limit(limit).all()
     return transactions
 
+@app.delete('/transactions/{transaction_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_tranasction(transaction_id: int, db:Session=Depends(get_db)):
+    transaction = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    
+    if not transaction:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Transaction not found')
+    
+    db.delete(transaction)
+    db.commit()
 
+    return None

@@ -7,6 +7,10 @@ function App() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showForm, setShowForm] = useState(false);
 
+  const handleUpdate = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
   const handleSuccess = () => {
     setRefreshKey(prev => prev + 1);
     setShowForm(false)
@@ -33,7 +37,7 @@ function App() {
           <DashboardStats refreshKey={refreshKey} />
           <div className="bg-white p-6 rounded-lg shadow mb-6">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">Histórico de Transações</h2>
-            <BudgetTable key={refreshKey} />
+            <BudgetTable refreshKey={refreshKey} onUpdate={handleUpdate} />
           </div>
         </main>
 

@@ -10,4 +10,8 @@ export const transactionService = {
     const response = await api.post("/transactions/", data);
     return response.data;
   },
+
+  remove: async (id) =>{
+    await api.delete(`/transactions/${id}`)
+  }
 };
