@@ -1,6 +1,7 @@
 import BudgetTable from './components/dashboard/BugetTable.jsx';
 import { useState } from 'react';
 import TransactionForm from './components/dashboard/TransactionForm.jsx';
+import DashboardStats from './components/dashboard/DashboardStats.jsx';
 
 function App() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -29,6 +30,7 @@ function App() {
           {showForm && (
             <TransactionForm onSuccess={handleSuccess} />
           )}
+          <DashboardStats refreshKey={refreshKey} />
           <div className="bg-white p-6 rounded-lg shadow mb-6">
             <h2 className="text-xl font-semibold mb-4 text-gray-700">Histórico de Transações</h2>
             <BudgetTable key={refreshKey} />
