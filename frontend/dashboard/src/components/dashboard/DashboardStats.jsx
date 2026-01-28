@@ -1,9 +1,7 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { PieChart, Pie, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { transactionService } from '../../services/transactionServices.js';
 
 const DashboardStats = ({ transactions }) => {
-  const [summary, setSummary] = useState({ income: 0, expense: 0, balance: 0 });
 
   const { income, expense, balance, chartData } = useMemo(() => {
     const incomeTotal = transactions

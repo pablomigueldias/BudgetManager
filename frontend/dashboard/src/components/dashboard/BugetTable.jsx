@@ -1,16 +1,24 @@
+import { useState } from 'react'
 import { transactionService } from '../../services/transactionServices.js';
-const BudgetTable = ({ transactions, onUpdate }) => {
 
+const BudgetTable = ({ transactions, onUpdate, onEdit, onDeleteSuccess }) => {
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Tem certeza que deseja excluir esta transação?")) {
-      try {
-        await transactionService.remove(id);
-        if (onUpdate) onUpdate();
-      } catch (error) {
-        alert("Erro ao excluir item.");
-        console.error(error);
-      }
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+  const handleDeleteClick = (id) => {
+    setDeleteConfirmId(id);
+    
+    setTimeout(() => setDeleteConfirmId(null), 3000);
+  };
+
+  const handleConfirmDelete = async (id) => {
+    try {
+      await transactionService.remove(id);
+      if (onDeleteSuccess) onDeleteSuccess();
+      setDeleteConfirmId(null);
+    } catch (error) {
+      alert("Erro ao excluir item.");
+      console.error(error);
     }
   };
 
@@ -67,13 +75,34 @@ const BudgetTable = ({ transactions, onUpdate }) => {
                   ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
                   {formatCurrency(t.amount)}
                 </td>
+                
                 <td className="px-6 py-4 text-center">
-                  <button
-                    onClick={() => handleDelete(t.id)}
-                    className="btn-danger"
-                  >
-                    Excluir
-                  </button>
+                  <div className="flex justify-center gap-3">
+                    
+                    <button 
+                      onClick={() => onEdit(t)} 
+                      className="text-blue-600 hover:text-blue-900 font-semibold hover:underline"
+                    >
+                      Alterar
+                    </button>
+
+                    {deleteConfirmId === t.id ? (
+                      <button 
+                        onClick={() => handleConfirmDelete(t.id)}
+                        className="text-white bg-red-600 hover:bg-red-700 font-bold py-1 px-3 rounded text-xs transition-all animate-pulse"
+                      >
+                        Confirmar?
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => handleDeleteClick(t.id)}
+                        className="btn-danger"
+                      >
+                        Excluir
+                      </button>
+                    )}
+
+                  </div>
                 </td>
               </tr>
             ))}
