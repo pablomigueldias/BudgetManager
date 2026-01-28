@@ -13,7 +13,7 @@ origins = ["*"]
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://budget-manager-puce.vercel.app/"
+    "https://budget-manager-puce.vercel.app/docs"
 ]
 
 app.add_middleware(
