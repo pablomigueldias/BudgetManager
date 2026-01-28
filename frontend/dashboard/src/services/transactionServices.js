@@ -1,8 +1,8 @@
 import api from "./api.js";
 
 export const transactionService = {
-  getAll: async () => {
-    const response = await api.get("/transactions/");
+  getAll: async (filters = {}) => {
+    const response = await api.get("/transactions/",{params: filters});
     return response.data;
   },
 

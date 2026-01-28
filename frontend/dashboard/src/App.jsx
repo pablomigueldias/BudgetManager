@@ -1,23 +1,54 @@
+import { useState, useEffect } from 'react';
 import BudgetTable from './components/dashboard/BugetTable.jsx';
-import { useState } from 'react';
 import TransactionForm from './components/dashboard/TransactionForm.jsx';
-import DashboardStats from './components/dashboard/DashboardStats.jsx';
+import DashboardStats from './components/dashboard/DashboardStats';
+import MonthFilter from './components/dashboard/MonthFilter';
+import { transactionService } from './services/transactionServices.js';
 
 function App() {
-  const [refreshKey, setRefreshKey] = useState(0);
   const [showForm, setShowForm] = useState(false);
 
-  const handleUpdate = () => {
-    setRefreshKey(prev => prev + 1);
+  const [transactions, setTransactions] = useState([]);
+
+  const [currentMonth, setCurrentMonth] = useState(
+    new Date().toISOString().slice(0, 7)
+  );
+
+  const fetchData = async () => {
+    try {
+      let filters = {};
+
+      if (currentMonth) {
+        const [year, month] = currentMonth.split('-');
+        const startDate = `${year}-${month}-01`;
+
+        const endDate = new Date(year, month, 0).toISOString().split('T')[0];
+
+        filters = { start_date: startDate, end_date: endDate };
+      }
+
+      const data = await transactionService.getAll(filters);
+      setTransactions(data);
+    } catch (error) {
+      console.error("Erro ao buscar transações:", error);
+    }
   };
 
-  const handleSuccess = () => {
-    setRefreshKey(prev => prev + 1);
-    setShowForm(false)
-  }
+  useEffect(() => {
+    fetchData();
+  }, [currentMonth]);
+
+  const handleUpdate = () => {
+    fetchData();
+  };
+
+  const handleFormSuccess = () => {
+    handleUpdate();
+    setShowForm(false);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
 
         <header className="mb-8 flex justify-between items-center">
@@ -25,19 +56,35 @@ function App() {
             <h1 className="text-3xl font-bold text-gray-800">Budget Manager</h1>
             <p className="text-gray-600">Controle financeiro pessoal</p>
           </div>
-          <button onClick={() => setShowForm(!showForm)} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-            {showForm ? 'Fechar Formulário' : '+ Nova Transação'}
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="btn-primary"
+          >
+            {showForm ? 'Fechar' : '+ Nova Transação'}
           </button>
         </header>
 
         <main>
           {showForm && (
-            <TransactionForm onSuccess={handleSuccess} />
+            <div className="mb-6">
+              <TransactionForm onSuccess={handleFormSuccess} />
+            </div>
           )}
-          <DashboardStats refreshKey={refreshKey} />
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-700">Histórico de Transações</h2>
-            <BudgetTable refreshKey={refreshKey} onUpdate={handleUpdate} />
+
+          <MonthFilter
+            currentMonth={currentMonth}
+            onMonthChange={setCurrentMonth}
+          />
+
+          <DashboardStats transactions={transactions} />
+
+          <div className="card mb-6 overflow-hidden">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">Histórico</h2>
+
+            <BudgetTable
+              transactions={transactions}
+              onUpdate={handleUpdate}
+            />
           </div>
         </main>
 

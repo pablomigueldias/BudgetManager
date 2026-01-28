@@ -1,34 +1,18 @@
-import { useEffect, useState } from 'react';
 import { transactionService } from '../../services/transactionServices.js';
+const BudgetTable = ({ transactions, onUpdate }) => {
 
-const BudgetTable = ({ onUpdate, refreshKey }) => {
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchTransactions = async () => {
-    try {
-      const data = await transactionService.getAll();
-      setTransactions(data);
-    } catch (error) {
-      console.error("Erro ao buscar transações:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTransactions();
-  }, [refreshKey]);
 
   const handleDelete = async (id) => {
-    try {
-      await transactionService.remove(id);
-      if (onUpdate) onUpdate();
-    } catch (error) {
-      alert('Erro ao remover transação.')
-      console.error("Erro ao remover transação:", error)
+    if (window.confirm("Tem certeza que deseja excluir esta transação?")) {
+      try {
+        await transactionService.remove(id);
+        if (onUpdate) onUpdate();
+      } catch (error) {
+        alert("Erro ao excluir item.");
+        console.error(error);
+      }
     }
-  }
+  };
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -38,11 +22,15 @@ const BudgetTable = ({ onUpdate, refreshKey }) => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
+    return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
   };
 
-  if (loading) {
-    return <div className="p-4 text-center text-gray-500">Carregando transações...</div>;
+  if (!transactions || transactions.length === 0) {
+     return (
+        <div className="card mt-6 text-center text-gray-500 p-8">
+            Nenhuma transação encontrada neste período.
+        </div>
+     );
   }
 
   return (
@@ -55,17 +43,11 @@ const BudgetTable = ({ onUpdate, refreshKey }) => {
             <th scope="col" className="px-6 py-3">Categoria</th>
             <th scope="col" className="px-6 py-3">Tipo</th>
             <th scope="col" className="px-6 py-3 text-right">Valor</th>
+            <th scope="col" className="px-6 py-3 text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {transactions.length === 0 ? (
-            <tr>
-              <td colSpan="5" className="px-6 py-4 text-center">
-                Nenhuma transação encontrada.
-              </td>
-            </tr>
-          ) : (
-            transactions.map((t) => (
+            {transactions.map((t) => (
               <tr key={t.id} className="bg-white border-b hover:bg-gray-50">
                 <td className="px-6 py-4">{formatDate(t.date)}</td>
                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -88,14 +70,13 @@ const BudgetTable = ({ onUpdate, refreshKey }) => {
                 <td className="px-6 py-4 text-center">
                   <button
                     onClick={() => handleDelete(t.id)}
-                    className="text-red-600 hover:text-red-900 font-semibold hover:underline"
+                    className="btn-danger"
                   >
                     Excluir
                   </button>
                 </td>
               </tr>
-            ))
-          )}
+            ))}
         </tbody>
       </table>
     </div>
